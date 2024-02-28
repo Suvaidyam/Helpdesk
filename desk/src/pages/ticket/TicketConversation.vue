@@ -1,5 +1,6 @@
 <template>
   <div class="divide-y overflow-auto px-5 pb-32">
+    <div class="mt-5" v-html="data.description"></div>
     <div v-for="c in conversation" :id="c.name" :key="c.name" class="mt-4">
       <TicketComment
         v-if="c.commented_by"
