@@ -12,6 +12,7 @@ from frappe.query_builder import Case, DocType, Order
 from pypika.functions import Count
 from pypika.queries import Query
 from pypika.terms import Criterion
+# from helpdesk.search import auto_assignAgent
 
 from helpdesk.consts import DEFAULT_TICKET_PRIORITY, DEFAULT_TICKET_TYPE
 from helpdesk.helpdesk.doctype.hd_ticket_activity.hd_ticket_activity import (
@@ -827,3 +828,12 @@ def permission_query(user):
 			customer=frappe.db.escape(c)
 		)
 	return res
+
+def auto_assignAgent():
+	abc = "dhwani.admin@gmail.com"
+	json_data = json.dumps([abc])
+	ticket_names = [59, 60]
+	for ticket_name in ticket_names:
+		clear_all_assignments("HD Ticket", str(ticket_name))  # Convert to string
+		assign({"assign_to": json_data, "doctype": "HD Ticket", "name": ticket_name})
+		publish_event("helpdesk:ticket-assignee-update", {"name": ticket_name})
