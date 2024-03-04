@@ -5,6 +5,7 @@ app_description = "Customer Service Software"
 app_icon = "octicon octicon-file-directory"
 app_color = "grey"
 app_email = "hello@frappe.io"
+from frappe.utils.background_jobs import enqueue
 app_license = "AGPLv3"
 
 before_install = "helpdesk.setup.install.before_install"
@@ -12,9 +13,17 @@ after_install = "helpdesk.setup.install.after_install"
 after_migrate = "helpdesk.search.build_index_in_background"
 
 scheduler_events = {
-	"all": ["helpdesk.search.build_index_if_not_exists"],
+    "all": ["helpdesk.search.build_index_if_not_exists"],
+    "cron": {
+        "* * * * *": [
+            "helpdesk.helpdesk.doctype.hd_ticket.hd_ticket.auto_assignAgent"
+        ]
+    }
 }
 
+
+# def scheduler_events():
+#     enqueue("helpdesk.doctype.hd_ticket.hd_ticket.call_function", queue='long', timeout=1),
 
 website_route_rules = [
 	{
